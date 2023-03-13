@@ -29,7 +29,7 @@ namespace API_SingUp.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Post([FromBody] Singup singup)
+		public async Task<IActionResult> insertProject([FromBody] Singup singup)
 		{
 			await _context.Singup.AddAsync(singup);
 			await _context.SaveChangesAsync();
