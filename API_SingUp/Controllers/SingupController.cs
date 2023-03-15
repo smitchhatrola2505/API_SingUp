@@ -1,4 +1,5 @@
 ﻿using API_SingUp.Data;
+using API_SingUp.DTO;
 using API_SingUp.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,27 +20,37 @@ namespace API_SingUp.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Get()
 		{
-			return Ok(await _context.Singup.ToListAsync());
+			return Ok(await _context.SingUp.ToListAsync());
 		}
 
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetById(int id)
 		{
-			return Ok(await _context.Singup.FirstOrDefaultAsync(c => c.Id == id));
+			return Ok(await _context.SingUp.FirstOrDefaultAsync(c => c.Id == id));
 		}
 
 		[HttpPost]
 		public async Task<IActionResult> insertProject([FromBody] Singup singup)
 		{
-			await _context.Singup.AddAsync(singup);
-			await _context.SaveChangesAsync();
-			return StatusCode(StatusCodes.Status201Created);
+			var isExit =  _context.FindUserByEmail(singup.Email);
+
+			if(isExit==null)
+			{
+				await _context.SingUp.AddAsync(singup);
+				await _context.SaveChangesAsync();
+				return StatusCode(StatusCodes.Status201Created);
+			}
+			else
+			{
+				return StatusCode(StatusCodes.Status409Conflict);
+
+			}
 		}
 
 		[HttpPut("{id}")]
 		public async Task<IActionResult> Put(int id, [FromBody] Singup singup)
 		{
-			var singupId = await _context.Singup.FirstOrDefaultAsync(c => c.Id == id);
+			var singupId = await _context.SingUp.FirstOrDefaultAsync(c => c.Id == id);
 
 			singupId.FirstName = singup.FirstName;
 			singupId.LastName = singup.LastName;
@@ -52,7 +63,7 @@ namespace API_SingUp.Controllers
 			singupId.BirthDate = singup.BirthDate;
 			singupId.Password = singup.Password;
 
-			_context.Singup.Update(singupId);
+			_context.SingUp.Update(singupId);
 			await _context.SaveChangesAsync();
 			return Ok("singup Updated");
 		}
@@ -60,8 +71,8 @@ namespace API_SingUp.Controllers
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> Delete(int id)
 		{
-			var sinupId = await _context.Singup.FirstOrDefaultAsync(c => c.Id == id);
-			_context.Singup.Remove(sinupId);
+			var sinupId = await _context.SingUp.FirstOrDefaultAsync(c => c.Id == id);
+			_context.SingUp.Remove(sinupId);
 			await _context.SaveChangesAsync();
 			return Ok("delet successefully");
 		}
