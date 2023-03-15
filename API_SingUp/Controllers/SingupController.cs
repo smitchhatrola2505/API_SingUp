@@ -32,7 +32,7 @@ namespace API_SingUp.Controllers
 		[HttpPost]
 		public async Task<IActionResult> insertProject([FromBody] Singup singup)
 		{
-			var isExit =  _context.FindUserByEmail(singup.Email);
+			var isExit =  _context.FindUserByData(singup.Email,singup.MobileNumber);
 
 			if(isExit==null)
 			{

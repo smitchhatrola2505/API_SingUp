@@ -20,6 +20,9 @@ namespace API_SingUp.Data
 		}
 
 		
-
+		public Singup FindUserByData(string email,string mobile )
+		{
+			return SingUp.SingleOrDefault(u => u.Email == email || u.MobileNumber == mobile);
+		}
 	}
 }
