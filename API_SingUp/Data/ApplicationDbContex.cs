@@ -1,5 +1,8 @@
 ﻿using API_SingUp.Model;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace API_SingUp.Data
 {
@@ -9,7 +12,17 @@ namespace API_SingUp.Data
 			: base(options)
 		{
 		}
-		public DbSet<Singup> Singup { get; set; }
+		public DbSet<Singup> SingUp { get; set; }
 
+		public Singup FindUserByEmail(string email)
+		{
+			return SingUp.SingleOrDefault(u => u.Email == email);
+		}
+
+		
+		public Singup FindUserByData(string email,string mobile )
+		{
+			return SingUp.SingleOrDefault(u => u.Email == email || u.MobileNumber == mobile);
+		}
 	}
 }
