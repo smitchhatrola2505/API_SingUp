@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
-
 namespace API_SingUp.Controllers
 {
 	[Route("api/login")]
@@ -30,25 +29,22 @@ namespace API_SingUp.Controllers
 			}
 
 
-			var user =  _context.FindUserByEmail(logiDTO.Email);
+			var user = _context.FindUserByEmail(logiDTO.Email);
 
 			if (user == null || !VerifyPassword(user.Password, logiDTO.Password))
 			{
 				return Unauthorized(); // Invalid login credentials
 			}
 
-			return Ok();
+			return Ok(user);
 		}
 
 		private bool VerifyPassword(string userPassword, string dtoPassword)
 		{
-			
-			for (int i = 0; i < userPassword.Length; i++)
+
+			if (userPassword != dtoPassword)
 			{
-				if (userPassword[i] != dtoPassword[i])
-				{
-					return false;
-				}
+				return false;
 			}
 			return true;
 		}
